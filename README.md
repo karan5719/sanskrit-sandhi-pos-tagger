@@ -1,4 +1,6 @@
-![Sanskrit NLP Pipeline](img/Sanskrit%20NLP%20Pipeline%20Flowchart.png)
+<div align="center">
+	<img src="img/dashboard.jpeg" alt="Project dashboard" width="900" />
+</div>
 
 # Sanskrit Sandhi + POS Tagger
 
@@ -50,4 +52,14 @@ License
 
 Contact
 - For questions, patch suggestions, or issues, please file an issue on the GitHub repository.
+
+## Pipeline Flowchart
+
+The full pipeline flowchart (click to view full size):
+
+<div align="center">
+	<a href="img/Sanskrit%20NLP%20Pipeline%20Flowchart.png">
+		<img src="img/Sanskrit%20NLP%20Pipeline%20Flowchart.png" alt="Sanskrit NLP Pipeline Flowchart" width="700" />
+	</a>
+</div>
 # sanskrit-sandhi-pos-tagger
