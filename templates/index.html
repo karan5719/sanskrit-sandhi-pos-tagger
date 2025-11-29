@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanskrit POS Tagger - Analysis Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #777a83 0%, #eadef5 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .sanskrit-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .sanskrit-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .process-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+        }
+
+        .process-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .process-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .analysis-overview {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .overview-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e1e5e9;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .split-methods {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .split-methods h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .method-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .method-item:last-child {
+            border-bottom: none;
+        }
+
+        .method-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .method-count {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .analysis-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .word-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .word-card.unknown {
+            background: #fff5f5;
+            border-color: #fed7d7;
+        }
+        
+        .word-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .word-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .pos-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .pos-tag.noun { background: #28a745; color: white; }
+        .pos-tag.verb { background: #dc3545; color: white; }
+        .pos-tag.pron { background: #6610f2; color: white; }
+        .pos-tag.adj { background: #fd7e14; color: white; }
+        .pos-tag.adv { background: #20c997; color: white; }
+        .pos-tag.particle { background: #6f42c1; color: white; }
+        .pos-tag.conj { background: #e83e8c; color: white; }
+        .pos-tag.prep { background: #17a2b8; color: white; }
+        .pos-tag.unknown { background: #6c757d; color: white; }
+        .pos-tag.default { background: #007bff; color: white; }
+
+        .confidence-score {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .confidence-value {
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .split-info {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e9ecef;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .split-text {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .error-message {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #c53030;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-language"></i> Sanskrit POS Tagger</h1>
+            <p>Advanced Part-of-Speech Tagging and Sandhi Analysis</p>
+        </header>
+
+        <section class="input-section">
+            <form id="processForm">
+                <div class="input-group">
+                    <label for="sanskritText">Enter Sanskrit Text:</label>
+                    <textarea 
+                        id="sanskritText" 
+                        class="sanskrit-input" 
+                        placeholder="Type Sanskrit text here..."
+                        dir="rtl"
+                        required
+                    ></textarea>
+                </div>
+                <button type="submit" class="process-btn" id="processBtn">
+                    <i class="fas fa-cogs"></i>
+                    <span>Analyze Text</span>
+                </button>
+            </form>
+        </section>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="results-section" id="resultsSection">
+            <section class="analysis-overview">
+                <h2 class="overview-title">📊 Analysis Overview</h2>
+                <div class="metrics-grid" id="metricsGrid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="totalTokens">0</div>
+                        <div class="metric-label">Total Tokens</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="sandhiSplits">0</div>
+                        <div class="metric-label">Sandhi Splits</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="posTags">0</div>
+                        <div class="metric-label">POS Tags</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="avgConfidence">0%</div>
+                        <div class="metric-label">Avg Confidence</div>
+                    </div>
+                </div>
+                
+                <div class="split-methods">
+                    <h3>🔧 Split Methods Used</h3>
+                    <div id="splitMethodsList">
+                        <div class="method-item">
+                            <span class="method-name">BILSTM</span>
+                            <span class="method-count" id="bilstmCount">0</span>
+                        </div>
+                        <div class="method-item">
+                            <span class="method-name">NONE</span>
+                            <span class="method-count" id="noneCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="analysis-section">
+                <h2 class="section-title">🏷️ POS Tagging Analysis</h2>
+                <div class="cards-grid" id="posCardsGrid">
+                    <!-- POS cards will be inserted here -->
+                </div>
+            </section>
+
+            <section class="analysis-section">
+                <h2 class="section-title">🔀 Sandhi Splitting Analysis</h2>
+                <div class="cards-grid" id="sandhiCardsGrid">
+                    <!-- Sandhi cards will be inserted here -->
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('processForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const text = document.getElementById('sanskritText').value.trim();
+            if (!text) {
+                showError('Please enter some Sanskrit text');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                const formData = new FormData();
+                formData.append('sanskrit_text', text);
+                
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayResults(result.results);
+                } else {
+                    showError(result.error);
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        function showLoading() {
+            const btn = document.getElementById('processBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Processing...</span>';
+            
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+        
+        function hideLoading() {
+            const btn = document.getElementById('processBtn');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-cogs"></i> <span>Analyze Text</span>';
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-exclamation-triangle" style="color: #e74c3c; font-size: 1.2rem;"></i>
+                    <div>
+                        <strong>${message}</strong>
+                        <div style="font-size: 0.9rem; margin-top: 5px; color: #666;">
+                            Please enter Sanskrit text in Devanagari script (e.g., रामो गच्छति वनम्)
+                        </div>
+                    </div>
+                </div>
+            `;
+            errorDiv.style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+        
+        function displayResults(results) {
+            // Calculate metrics
+            const totalTokens = results.tokens ? results.tokens.length : 0;
+            const sandhiSplits = results.sandhi_operations ? 
+                results.sandhi_operations.filter(op => op.split && op.split.length > 1).length : 0;
+            const posTags = new Set(results.tokens ? results.tokens.map(token => token[1]) : []).size;
+            const avgConfidence = results.confidence ? (results.confidence * 100).toFixed(1) : '0.0';
+            
+            // Count split methods (excluding edge_case)
+            let bilstmCount = 0;
+            let noneCount = 0;
+            
+            if (results.sandhi_operations && results.sandhi_operations.length > 0) {
+                const filteredOperations = results.sandhi_operations.filter(op => {
+                    const method = op.method ? op.method.toLowerCase() : 'none';
+                    return method !== 'edge_case';
+                });
+                
+                filteredOperations.forEach(op => {
+                    const method = op.method ? op.method.toUpperCase() : 'NONE';
+                    if (method === 'BILSTM') {
+                        bilstmCount++;
+                    } else {
+                        noneCount++;
+                    }
+                });
+            } else {
+                // If no sandhi operations, count all tokens as NONE method
+                noneCount = totalTokens;
+            }
+            
+            // Update metrics
+            document.getElementById('totalTokens').textContent = totalTokens;
+            document.getElementById('sandhiSplits').textContent = sandhiSplits;
+            document.getElementById('posTags').textContent = posTags;
+            document.getElementById('avgConfidence').textContent = avgConfidence + '%';
+            document.getElementById('bilstmCount').textContent = bilstmCount;
+            document.getElementById('noneCount').textContent = noneCount;
+            
+            // Display POS cards
+            displayPOSCards(results.tokens || []);
+            
+            // Display Sandhi cards
+            displaySandhiCards(results.sandhi_operations || []);
+            
+            // Show results section
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+        }
+        
+        function displayPOSCards(tokens) {
+            const grid = document.getElementById('posCardsGrid');
+            grid.innerHTML = '';
+            
+            tokens.forEach(token => {
+                const [word, posTag, confidence] = token;
+                const confidenceValue = confidence ? (confidence * 100).toFixed(1) : '95.0';
+                
+                // Skip UNKNOWN tags entirely
+                if (posTag === 'UNK' || posTag === 'UNKNOWN') {
+                    return; // Skip this token
+                }
+                
+                // Determine POS tag class and display text
+                let tagClass = 'default';
+                let displayTag = posTag;
+                
+                // Map common POS tags to classes
+                const tagMap = {
+                    'NOUN': 'noun',
+                    'NOUN_PROP': 'noun', 
+                    'VERB': 'verb',
+                    'PRON': 'pron',
+                    'PRON_DEM': 'pron',
+                    'PRON_INT': 'pron',
+                    'PRON_PER': 'pron',
+                    'ADJ': 'adj',
+                    'ADV': 'adv',
+                    'PART': 'particle',
+                    'PART_PARTICIPLE': 'particle',
+                    'CONJ': 'conj',
+                    'PREP': 'prep',
+                    'SYM': 'default',
+                    'NUM': 'default',
+                    'PUNCT': 'default'
+                };
+                
+                tagClass = tagMap[posTag] || 'default';
+                
+                const card = document.createElement('div');
+                card.className = 'word-card';
+                card.innerHTML = `
+                    <div class="word-text">${word}</div>
+                    <div class="pos-tag ${tagClass}">${displayTag}</div>
+                    <div class="confidence-score">
+                        Confidence: <span class="confidence-value">${confidenceValue}%</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        function displaySandhiCards(sandhiOperations) {
+            const grid = document.getElementById('sandhiCardsGrid');
+            grid.innerHTML = '';
+            
+            // Filter out edge_case operations from display
+            const filteredOperations = sandhiOperations.filter(op => {
+                const method = op.method ? op.method.toLowerCase() : 'none';
+                return method !== 'edge_case';
+            });
+            
+            filteredOperations.forEach(op => {
+                const confidenceValue = op.confidence ? (op.confidence * 100).toFixed(1) : '95.0';
+                const method = op.method || 'NONE';
+                
+                let splitText = 'No split detected';
+                let splitDisplay = '';
+                
+                if (op.split && op.split.length > 1) {
+                    splitText = op.split.join(' + ');
+                    splitDisplay = `
+                        <div class="split-info">
+                            <div class="split-text">${op.original} → ${splitText}</div>
+                            <div>Method: <strong>${method}</strong></div>
+                        </div>
+                    `;
+                } else {
+                    splitDisplay = `
+                        <div class="split-info">
+                            <div>No split detected</div>
+                            <div>Method: <strong>${method}</strong></div>
+                        </div>
+                    `;
+                }
+                
+                const card = document.createElement('div');
+                card.className = 'word-card';
+                card.innerHTML = `
+                    <div class="word-text">${op.original}</div>
+                    <div class="pos-tag">${method}</div>
+                    <div class="confidence-score">
+                        Confidence: <span class="confidence-value">${confidenceValue}%</span>
+                    </div>
+                    ${splitDisplay}
+                `;
+                grid.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
