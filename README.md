@@ -1,3 +1,5 @@
+![Sanskrit NLP Pipeline](img/Sanskrit%20NLP%20Pipeline%20Flowchart.png)
+
 # Sanskrit Sandhi + POS Tagger
 
 This repository contains scripts and models for Sanskrit Sandhi splitting and Part-of-Speech (POS) tagging.
