@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: sanskrit-nlp
+    env: docker
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: PORT
+        value: 10000
+    region: oregon

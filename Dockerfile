@@ -16,12 +16,12 @@ COPY . .
 # Create models directory if it doesn't exist
 RUN mkdir -p models
 
-# Make port 8085 available to the world outside this container
-EXPOSE 8085
+# Make port 10000 available to the world outside this container (Render uses 10000)
+EXPOSE 10000
 
 # Define environment variable
 ENV FLASK_APP=simple_app.py
-ENV PORT=8085
+ENV PORT=10000
 
 # Run app with gunicorn when the container launches
-CMD ["gunicorn", "--bind", "0.0.0.0:8085", "--workers", "2", "--timeout", "120", "simple_app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "--workers", "2", "--timeout", "120", "simple_app:app"]
