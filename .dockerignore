@@ -1,0 +1,74 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Models (too large for Docker image, mount as volume)
+# Keep smaller model files but exclude large ones
+*.pt
+*.h5
+*.bin
+*.onnx
+# But allow .pkl files for CRF models
+# !*.pkl
+
+# Data files (mount as volume if needed)
+# Exclude large data files but keep essential ones
+sandhi_cleaned.txt
+*.csv
+*.json
+*.tsv
+# But keep dataset files and smaller txt files
+# !*.txt
+
+# Documentation
+*.md
+!README.md
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp

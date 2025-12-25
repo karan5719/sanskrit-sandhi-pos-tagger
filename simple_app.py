@@ -17,7 +17,7 @@ app = Flask(__name__)
 # Initialize the integrated processor
 print("🔧 Loading Integrated Sanskrit Processor...")
 processor = IntegratedSanskritProcessor(
-    pos_model_path='/Users/himanshukumar/Documents/sanskrit-pos-tagger 2/models/enhanced_crf_pos_model_v3.pkl',
+    pos_model_path=os.path.join(current_dir, 'models', 'enhanced_crf_pos_model_v3.pkl'),
     bilstm_threshold=0.7,
     use_bilstm=True
 )
