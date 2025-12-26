@@ -16,11 +16,24 @@ app = Flask(__name__)
 
 # Initialize the integrated processor
 print("🔧 Loading Integrated Sanskrit Processor...")
-processor = IntegratedSanskritProcessor(
-    pos_model_path=os.path.join(current_dir, 'models', 'enhanced_crf_pos_model_v3.pkl'),
-    bilstm_threshold=0.7,
-    use_bilstm=True
-)
+try:
+    processor = IntegratedSanskritProcessor(
+        pos_model_path=os.path.join(current_dir, 'models', 'enhanced_crf_pos_model_v3.pkl'),
+        bilstm_model_path=os.path.join(current_dir, 'models', 'bilstm_sandhi.pt'),
+        bilstm_threshold=0.7,
+        use_bilstm=True
+    )
+    print("✅ Processor loaded successfully")
+except Exception as e:
+    print(f"⚠️  Model loading failed: {e}")
+    print("🔄 Loading without models...")
+    processor = IntegratedSanskritProcessor(
+        pos_model_path=None,
+        bilstm_model_path=None,
+        bilstm_threshold=0.7,
+        use_bilstm=False
+    )
+    print("✅ Processor loaded in basic mode")
 
 @app.route('/')
 def home():

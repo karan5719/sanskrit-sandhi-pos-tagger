@@ -21,7 +21,6 @@ EXPOSE 10000
 
 # Define environment variable
 ENV FLASK_APP=simple_app.py
-ENV PORT=10000
 
 # Run app with gunicorn when the container launches
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "--workers", "2", "--timeout", "120", "simple_app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "2", "--timeout", "120", "simple_app:app"]
