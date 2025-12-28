@@ -1,65 +1,62 @@
-<div align="center">
-	<img src="img/dashboard.jpeg" alt="Project dashboard" width="900" />
-</div>
+---
+title: Sanskrit POS Tagger & Sandhi Splitter
+emoji: 🕉️
+colorFrom: blue
+colorTo: green
+sdk: gradio
+sdk_version: 4.0.0
+app_file: app.py
+pinned: false
+license: mit
+---
 
-# Sanskrit Sandhi + POS Tagger
+# Sanskrit NLP Pipeline
 
-This repository contains scripts and models for Sanskrit Sandhi splitting and Part-of-Speech (POS) tagging.
+This is a comprehensive Sanskrit Natural Language Processing pipeline that combines Part-of-Speech (POS) tagging and Sandhi splitting capabilities.
 
-Contents
-- `simple_app.py` — minimal demo script to run the integrated processor.
-- `src/` — core modules: tokenizer, model wrappers, and training scripts.
-- `data/` — dataset loaders and sample data files.
-- `models/` — trained model weights (large files excluded from git in `.gitignore`).
+## Features
 
-Prerequisites
-- Python 3.8+ (test with `python --version`)
-- Install dependencies from `requirements.txt`:
+- **POS Tagging**: Uses Conditional Random Fields (CRF) to tag Sanskrit words with their grammatical categories
+- **Sandhi Splitting**: Employs a hybrid BiLSTM model to split compound words formed by Sanskrit sandhi rules
+- **Integrated Processing**: Combines both analyses for complete Sanskrit text understanding
 
-```bash
-python -m pip install -r requirements.txt
-```
+## How it Works
 
-Quickstart / Usage
+1. **Tokenization**: Breaks down input text into individual words/tokens
+2. **Sandhi Analysis**: Identifies and splits compound words formed by sandhi rules
+3. **POS Tagging**: Assigns grammatical tags to each word
+4. **Confidence Scoring**: Provides confidence scores for all predictions
 
-1) Run the demo app:
+## Usage
 
-```bash
-cd "/Users/himanshukumar/Documents/sanskrit-pos-tagger 2"
-python simple_app.py
-```
+Simply enter Sanskrit text in Devanagari script and click "Analyze Text" to see:
+- Part-of-Speech tags for each word
+- Sandhi splitting operations
+- Overall confidence scores
 
-2) Use the `integrated_sanskrit_processor` from `src` in your own code:
+## Models
 
-```python
-from src.integrated_sanskrit_processor import IntegratedSanskritProcessor
+The app uses pre-trained models:
+- CRF POS Tagger (`enhanced_crf_pos_model_v3.pkl`)
+- BiLSTM Sandhi Splitter (`bilstm_sandhi.pt`)
 
-proc = IntegratedSanskritProcessor()
-text = "अहं गच्छामि"
-result = proc.process(text)
-print(result)
-```
+## Examples
 
-Development / Training
-- Training scripts are available under `src/` (for example `train_bilstm_sandhi.py`). Review those files to run training.
+Try these sample Sanskrit sentences:
+- रामः सीतां पश्यति (Rama sees Sita)
+- अहं गच्छामि (I go)
+- देवाः पुण्यं ददति (Gods give merit)
+- विद्या विनयेन शोभते (Knowledge shines with humility)
 
-Notes
-- The `models/` directory may contain large pre-trained weights (e.g., `.pt` files); these are ignored by `.gitignore`.
-- If you want CI, tests, or a license added, open an issue or request it here and I'll add them.
+## Technical Details
 
-License
-- Add a license file if you want this repository to be explicitly licensed.
+Built with:
+- Python 3.8+
+- Gradio for the web interface
+- PyTorch for neural networks
+- scikit-learn for CRF implementation
+- Custom Sanskrit tokenization and processing
 
-Contact
-- For questions, patch suggestions, or issues, please file an issue on the GitHub repository.
+## License
 
-## Pipeline Flowchart
-
-The full pipeline flowchart (click to view full size):
-
-<div align="center">
-	<a href="img/Sanskrit%20NLP%20Pipeline%20Flowchart.png">
-		<img src="img/Sanskrit%20NLP%20Pipeline%20Flowchart.png" alt="Sanskrit NLP Pipeline Flowchart" width="700" />
-	</a>
-</div>
-# sanskrit-sandhi-pos-tagger
+MIT License

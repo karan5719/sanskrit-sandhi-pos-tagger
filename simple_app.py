@@ -19,7 +19,6 @@ print("🔧 Loading Integrated Sanskrit Processor...")
 try:
     processor = IntegratedSanskritProcessor(
         pos_model_path=os.path.join(current_dir, 'models', 'enhanced_crf_pos_model_v3.pkl'),
-        bilstm_model_path=os.path.join(current_dir, 'models', 'bilstm_sandhi.pt'),
         bilstm_threshold=0.7,
         use_bilstm=True
     )
@@ -29,7 +28,6 @@ except Exception as e:
     print("🔄 Loading without models...")
     processor = IntegratedSanskritProcessor(
         pos_model_path=None,
-        bilstm_model_path=None,
         bilstm_threshold=0.7,
         use_bilstm=False
     )
